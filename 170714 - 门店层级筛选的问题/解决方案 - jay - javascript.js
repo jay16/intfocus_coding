@@ -1,3 +1,6 @@
+/*
+ * 代码逻辑同 `解决方案 - jay - ruby.rb`
+ */
 Array.prototype.flatten = function() {
   var ret = [];
   for(var i = 0; i < this.length; i++) {
