@@ -78,27 +78,19 @@
 #
 require 'json'
 
-def middleware(items)
-  constructed_items = []
-  items.each do |item|
-    is_find = false
-    constructed_items.each do |obj|
-      next if obj[:titles] != item[0]
-      is_find = true
-      obj[:infos].push(item[1..-1])
+def middleware(two_dim_items)
+  two_dim_items.each_with_object([]) do |dim_items, constructed_items|
+    if constructed_item = constructed_items.find { |h| h[:titles] == dim_items.first }
+      constructed_item[:infos].push(dim_items[1..-1])
+    else
+      constructed_items.push({titles: dim_items[0], infos: [dim_items[1..-1]]})
     end
-    constructed_items.push({titles: item[0], infos: [item[1..-1]]}) if !is_find
   end
-  constructed_items
 end
 
 def convert_with_recursion(constructed_items)
   constructed_items.map do |constructed_item|
-    if constructed_item[:infos].flatten.empty?
-      constructed_item[:infos] = []
-    else
-      constructed_item[:infos] = convert_with_recursion(middleware(constructed_item[:infos]))
-    end
+    constructed_item[:infos] = (constructed_item[:infos].flatten.empty? ? [] : convert_with_recursion(middleware(constructed_item[:infos])))
     constructed_item
   end
 end
