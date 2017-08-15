@@ -43,4 +43,3 @@ def getChildren(key):
 json_str = json.dumps(getChildren(''), default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 print json_str
-
